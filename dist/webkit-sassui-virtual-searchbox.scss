@@ -1,7 +1,7 @@
 /*webkit-sassui-virtual-searchbox Start*/
-@mixin webkit-sassui-virtual-searchbox($inBgColor:#f4f5f6,$inColor:#666,$inBaseSize:10px) {
+@mixin webkit-sassui-virtual-searchbox($inBgColor:#f4f5f6,$inColor:#666) {
   //Your mixin code goes here.
-  font-size: $inBaseSize;
+  font-size: 10px;
   display: -webkit-box;
   -webkit-box-align: center;
   -webkit-box-pack: center;
