@@ -1,0 +1,29 @@
+{
+  "name": "webkit-sassui-virtual-searchbox",
+  "description": "Webkit sass ui module for virtual searchbox.",
+  "main": [
+    "dist/webkit-sassui-virtual-searchbox.css",
+    "dist/webkit-sassui-virtual-searchbox.scss"
+  ],
+  "authors": [
+    "afei"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "webkit",
+    "cssui",
+    "virtual-searchbox"
+  ],
+  "homepage": "https://github.com/afeiship/webkit-cssui-absolute-center",
+  "moduleType": [
+    "amd"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "src"
+  ]
+}
