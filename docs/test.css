@@ -15,7 +15,7 @@ body {
   height: 3.6em;
 }
 
-.test-webkit-sassui-virtual-searchbox > i {
+.test-webkit-sassui-virtual-searchbox > .search-icon {
   display: -webkit-box;
   width: 2.8em;
   height: 2.8em;
@@ -23,7 +23,7 @@ body {
   background-size: cover;
 }
 
-.test-webkit-sassui-virtual-searchbox > span {
+.test-webkit-sassui-virtual-searchbox > .search-placeholder {
   font-size: 1.4em;
   color: #666;
 }
