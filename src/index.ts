@@ -5,7 +5,7 @@ export interface IsDataEqualOptions {
   ignoreKeys?: string[];
 }
 
-function filterByCommonKeys(obj1, obj2) {
+function filterByCommonKeys(obj1: any, obj2: any) {
   const commonKeys = Object.keys(obj1).filter((key) =>
     obj2.hasOwnProperty(key),
   );
@@ -20,7 +20,7 @@ function filterByCommonKeys(obj1, obj2) {
         return acc;
       }, {});
     }
-    return obj; // 基本类型或函数直接返回
+    return obj;
   };
 
   return [filterKeys(obj1, commonKeys), filterKeys(obj2, commonKeys)];
