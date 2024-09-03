@@ -1,7 +1,0 @@
-@import "../dist/webkit-sassui-virtual-searchbox.scss";
-body{
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-}
-.test-webkit-sassui-virtual-searchbox{
-  @include webkit-sassui-virtual-searchbox();
-}
