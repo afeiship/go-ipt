@@ -18,4 +18,13 @@ describe('api.basic', () => {
     expect(isPartialEqual(data1, data2, { ignoreKeys: ['is_editing'] })).toBe(true);
     expect(isPartialEqual(data1, data3, { ignoreKeys: ['is_editing'] })).toBe(true);
   });
+
+  test('04/array', () => {
+    const data1 = [{ a: 1, b: 2, c: 3, is_editing: true }, { a: 1, b: 2, c: 3 }];
+    const data2 = [{ a: 1, b: 2, c: 3 }];
+    const data3 = [{ a: 1, b: 2, c: 3, is_editing: false }];
+    expect(isPartialEqual(data1, data2, { ignoreKeys: ['is_editing'] })).toBe(false);
+    expect(isPartialEqual(data1, data3, { ignoreKeys: ['is_editing'] })).toBe(false);
+    expect(isPartialEqual(data2, data3, { ignoreKeys: ['is_editing'] })).toBe(true);
+  });
 });
