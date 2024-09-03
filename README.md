@@ -15,12 +15,10 @@ npm install @jswork/is-partial-equal
 ```js
 import isDataEqual from '@jswork/is-partial-equal';
 
-// usage goes here.
-```
+const data1 = { name: 'afei', age: 25 };
+const data2 = { name: 'afei' };
 
-## types
-```ts
-/// <reference types="@jswork/is-partial-equal/global.d.ts" />
+console.log(isDataEqual(data1, data2)); // true
 ```
 
 ## license
