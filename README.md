@@ -13,12 +13,12 @@ npm install @jswork/is-partial-equal
 
 ## usage
 ```js
-import isDataEqual from '@jswork/is-partial-equal';
+import isPartialEqual from '@jswork/is-partial-equal';
 
 const data1 = { name: 'afei', age: 25 };
 const data2 = { name: 'afei' };
 
-console.log(isDataEqual(data1, data2)); // true
+console.log(isPartialEqual(data1, data2)); // true
 ```
 
 ## license
