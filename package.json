@@ -1,6 +1,6 @@
 {
   "name": "@jswork/is-partial-equal",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Fast data equal for business data.",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.esm.js",
@@ -37,6 +37,7 @@
     "changed",
     "data",
     "equal",
-    "fast"
+    "fast",
+    "partial"
   ]
 }
