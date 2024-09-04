@@ -5,6 +5,9 @@ export interface IsDataEqualOptions {
   ignoreKeys?: string[];
 }
 
+const isObject = (obj: any) =>
+  obj !== null && typeof obj === 'object' && !Array.isArray(obj);
+
 function filterByCommonKeys(obj1: any, obj2: any) {
   const commonKeys = Object.keys(obj1).filter((key) =>
     obj2.hasOwnProperty(key),
@@ -12,7 +15,8 @@ function filterByCommonKeys(obj1: any, obj2: any) {
   const filterKeys = (obj, keys) => {
     if (Array.isArray(obj)) {
       return obj.map((item) => filterKeys(item, keys));
-    } else if (obj !== null && typeof obj === 'object') {
+    }
+    if (isObject(obj)) {
       return keys.reduce((acc, key) => {
         if (obj.hasOwnProperty(key)) {
           acc[key] = filterKeys(obj[key], keys);

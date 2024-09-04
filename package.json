@@ -30,8 +30,8 @@
     "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
-    "@jswork/filter-keys-deep": "^1.0.1",
-    "fast-deep-equal": "^3.1.3"
+    "@jswork/filter-keys-deep": "*",
+    "fast-deep-equal": "*"
   },
   "keywords": [
     "changed",
