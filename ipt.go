@@ -12,7 +12,7 @@ type Option[T any] struct {
 	Value T
 }
 
-// SelectOption prompts the user with a list of options and returns the value of the selected option.
+// Ipt prompts the user with a list of options and returns the value of the selected option.
 func Ipt[T any](message string, options []Option[T]) (T, error) {
 	var zeroValue T // Default value of type T
 
