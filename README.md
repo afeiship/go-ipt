@@ -1,6 +1,8 @@
 # go-ipt
 > Interactive Pipe To: The golang cli interactive workflow.
 
+![img.png](__tests__/img.png)
+
 ## installation
 ```sh
 go get -u github.com/afeiship/go-ipt
