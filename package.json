@@ -1,43 +1,11 @@
 {
-  "name": "@jswork/is-partial-equal",
-  "version": "1.0.3",
-  "description": "Fast data equal for business data.",
-  "main": "./dist/index.cjs.js",
-  "module": "./dist/index.esm.js",
-  "browser": "./dist/index.umd.js",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "dist",
-    "global.d.ts"
-  ],
-  "scripts": {
-    "build": "tsup",
-    "test": "bun test",
-    "release": "release-it"
-  },
+  "name": "golang-library",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Interactive Pipe To: The golang cli interactive workflow.",
   "license": "MIT",
-  "devDependencies": {
-    "@jswork/next": "^1.2.2",
-    "@swc/core": "^1.3.101",
-    "@types/jest": "^29.5.12",
-    "@types/node": "^18.15.5",
-    "tslib": "^2.6.2",
-    "tsup": "^8.0.1",
-    "typescript": "^4.9.5"
-  },
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org"
-  },
-  "dependencies": {
-    "@jswork/filter-keys-deep": "*",
-    "fast-deep-equal": "*"
-  },
-  "keywords": [
-    "changed",
-    "data",
-    "equal",
-    "fast",
-    "partial"
-  ]
+  "scripts": {
+    "test": "go test __tests__/*.go -v",
+    "release": "release-it"
+  }
 }

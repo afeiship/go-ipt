@@ -1,14 +1,23 @@
 {
   "git": {
-    "requireCleanWorkingDir": false
+    "changelog": "git log --pretty=format:\"* %s (%h)\" ${from}...${to}",
+    "requireCleanWorkingDir": false,
+    "requireBranch": false,
+    "requireUpstream": true,
+    "requireCommits": false,
+    "tagName": "v${version}"
   },
   "hooks": {
-    "after:init": ["npm run test", "t2k"],
-    "after:bump": ["npm run build"],
-    "after:release": ["npm pkg get name | cnpm sync"]
+    "before:init": ["git fetch --tags"],
+    "after:init": ["npm run test", "t2k"]
   },
   "github": {
     "release": true,
-    "proxy": "http://127.0.0.1:9090"
+    "releaseName": "Release ${version}",
+    "skipChecks": true
+  },
+  "npm": {
+    "publish": false,
+    "skipChecks": true
   }
 }
