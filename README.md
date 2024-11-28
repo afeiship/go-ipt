@@ -27,7 +27,7 @@ func main() {
 	}
 
 	color, err := ipt.Ipt("What is your favorite color?", opts)
-	if err!= nil {
+	if err != nil {
 		panic(err)
 	}
 	println(color.Name, color.Hex)
