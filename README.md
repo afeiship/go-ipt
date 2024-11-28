@@ -1,7 +1,12 @@
+<div align="center">
+	<br>
+	<img width="100" src="__tests__/img.png" alt="ipt logo">
+	<br>
+</div>
+
 # go-ipt
 > Interactive Pipe To: The golang cli interactive workflow.
 
-![img.png](__tests__/img.png)
 
 ## installation
 ```sh
