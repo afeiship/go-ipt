@@ -1,7 +1,7 @@
 {
   "name": "go-ipt",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Interactive Pipe To: The golang cli interactive workflow.",
   "license": "MIT",
   "scripts": {
