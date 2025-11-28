@@ -70,7 +70,7 @@ opts := []ipt.Option{
 	{Label: "Blue", Value: "blue", Data: ColorInfo{"Blue", "#0000FF"}},
 }
 
-value, data, err := ipt.IptWithDefault("Select color:", opts, "green")
+value, data, err := ipt.IptWithData("Select color:", opts, "green")
 if err != nil {
 	panic(err)
 }
@@ -104,7 +104,7 @@ Returns selected **value** or error.
 
 ---
 
-### `func IptWithDefault(message string, options []Option, defaultValue string) (string, any, error)`
+### `func IptWithData(message string, options []Option, defaultValue string) (string, any, error)`
 
 Same as `Ipt`, but also returns the associated `Data` field.
 

@@ -50,8 +50,8 @@ func TestIptWithData(f *testing.T) {
 		{Label: "Blue", Value: "blue", Data: ColorObj{"Blue", "#0000FF"}},
 	}
 
-	// Test IptWithDefault function
-	value, data, err := ipt.IptWithDefault("What is your favorite color?", opts, "green")
+	// Test IptWithData function
+	value, data, err := ipt.IptWithData("What is your favorite color?", opts, "green")
 	if err != nil {
 		if err.Error() == "EOF" {
 			f.Skip("Skipping test due to EOF (expected in non-interactive environment)")
@@ -133,8 +133,8 @@ func TestIptWithNilData(f *testing.T) {
 		f.Error("Expected default value to match")
 	}
 
-	// Test IptWithDefault function (includes data)
-	value, data, err := ipt.IptWithDefault("Select an option:", opts, "opt2")
+	// Test IptWithData function (includes data)
+	value, data, err := ipt.IptWithData("Select an option:", opts, "opt2")
 	if err != nil {
 		if err.Error() == "EOF" {
 			f.Skip("Skipping test due to EOF (expected in non-interactive environment)")
@@ -160,8 +160,8 @@ func TestIptEmptyOptions(f *testing.T) {
 		f.Error("Expected error for empty options")
 	}
 
-	_, _, err = ipt.IptWithDefault("This should fail", opts, "default")
+	_, _, err = ipt.IptWithData("This should fail", opts, "default")
 	if err == nil {
-		f.Error("Expected error for empty options in IptWithDefault")
+		f.Error("Expected error for empty options in IptWithData")
 	}
 }

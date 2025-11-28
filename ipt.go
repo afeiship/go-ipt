@@ -62,8 +62,8 @@ func Ipt(message string, options []Option, opts ...string) (string, error) {
 	return "", errors.New("invalid selection")
 }
 
-// IptWithDefault prompts the user with options and returns both value and data
-func IptWithDefault(message string, options []Option, defaultValue string) (string, any, error) {
+// IptWithData prompts the user with options and returns both value and data
+func IptWithData(message string, options []Option, defaultValue string) (string, any, error) {
 	if len(options) == 0 {
 		return "", nil, errors.New("options cannot be empty")
 	}
