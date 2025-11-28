@@ -13,7 +13,6 @@
 - Simple CLI prompts with list selection
 - Supports default selection
 - Extensible `Data` field for attaching metadata
-- Zero external dependencies
 - Cross-platform (uses standard `os` and `bufio`)
 
 ## 📦 Installation
