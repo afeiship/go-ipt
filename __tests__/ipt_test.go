@@ -7,15 +7,11 @@ import (
 )
 
 func TestIpt(f *testing.T) {
-	type ColorObj struct {
-		Name string
-		Hex  string
-	}
-
-	opts := []ipt.Option[ColorObj]{
-		{Label: "Red", Value: ColorObj{"Red", "#FF0000"}},
-		{Label: "Green", Value: ColorObj{"Green", "#00FF00"}},
-		{Label: "Blue", Value: ColorObj{"Blue", "#0000FF"}},
+	// Test with simple string options
+	opts := []ipt.Option{
+		{Label: "Red", Value: "red"},
+		{Label: "Green", Value: "green"},
+		{Label: "Blue", Value: "blue"},
 	}
 
 	// Test without default value
@@ -30,8 +26,7 @@ func TestIpt(f *testing.T) {
 	f.Log("Without default:", color)
 
 	// Test with default value
-	defaultColor := ColorObj{"Green", "#00FF00"}
-	colorWithDefault, err := ipt.Ipt("What is your favorite color?", opts, defaultColor)
+	colorWithDefault, err := ipt.Ipt("What is your favorite color?", opts, "green")
 	if err != nil {
 		// Skip test if EOF error (expected during automated testing)
 		if err.Error() == "EOF" {
@@ -42,34 +37,35 @@ func TestIpt(f *testing.T) {
 	f.Log("With default:", colorWithDefault)
 }
 
-func TestIptRawString(f *testing.T) {
-	opts := []ipt.Option[string]{
-		{Label: "Red", Value: "Red"},
-		{Label: "Green", Value: "Green"},
-		{Label: "Blue", Value: "Blue"},
+func TestIptWithData(f *testing.T) {
+	type ColorObj struct {
+		Name string
+		Hex  string
 	}
 
-	// Test without default value
-	color, err := ipt.Ipt("What is your favorite color?", opts)
+	// Test with data field
+	opts := []ipt.Option{
+		{Label: "Red", Value: "red", Data: ColorObj{"Red", "#FF0000"}},
+		{Label: "Green", Value: "green", Data: ColorObj{"Green", "#00FF00"}},
+		{Label: "Blue", Value: "blue", Data: ColorObj{"Blue", "#0000FF"}},
+	}
+
+	// Test IptWithDefault function
+	value, data, err := ipt.IptWithDefault("What is your favorite color?", opts, "green")
 	if err != nil {
-		// Skip test if EOF error (expected during automated testing)
 		if err.Error() == "EOF" {
 			f.Skip("Skipping test due to EOF (expected in non-interactive environment)")
 		}
 		f.Error(err)
 	}
-	f.Log("Without default:", color)
+	f.Log("Value:", value, "Data:", data)
 
-	// Test with default value
-	colorWithDefault, err := ipt.Ipt("What is your favorite color?", opts, "Blue")
-	if err != nil {
-		// Skip test if EOF error (expected during automated testing)
-		if err.Error() == "EOF" {
-			f.Skip("Skipping test due to EOF (expected in non-interactive environment)")
+	// Verify data is correct
+	if colorObj, ok := data.(ColorObj); ok {
+		if colorObj.Name != "Green" || colorObj.Hex != "#00FF00" {
+			f.Error("Data doesn't match expected values")
 		}
-		f.Error(err)
 	}
-	f.Log("With default:", colorWithDefault)
 }
 
 func TestIptRawMethod(f *testing.T) {
@@ -97,88 +93,75 @@ func TestIptRawMethod(f *testing.T) {
 }
 
 func TestIptWithInvalidDefault(f *testing.T) {
-	opts := []ipt.Option[string]{
-		{Label: "Red", Value: "Red"},
-		{Label: "Green", Value: "Green"},
-		{Label: "Blue", Value: "Blue"},
+	opts := []ipt.Option{
+		{Label: "Red", Value: "red"},
+		{Label: "Green", Value: "green"},
+		{Label: "Blue", Value: "blue"},
 	}
 
-	// Test with default value not in options
-	_, err := ipt.Ipt("What is your favorite color?", opts, "Yellow")
+	// Test with default value not in options - this should not error, just use first option
+	color, err := ipt.Ipt("What is your favorite color?", opts, "yellow")
+	if err != nil {
+		if err.Error() == "EOF" {
+			f.Skip("Skipping test due to EOF (expected in non-interactive environment)")
+		}
+		f.Error(err)
+	}
+	// Should return first option's value since yellow is not found
+	if color != "red" {
+		f.Error("Expected first option when default not found")
+	}
+}
+
+func TestIptWithNilData(f *testing.T) {
+	// Test with nil data
+	opts := []ipt.Option{
+		{Label: "Option1", Value: "opt1", Data: nil},
+		{Label: "Option2", Value: "opt2", Data: "simple data"},
+		{Label: "Option3", Value: "opt3"}, // Data omitted, should be nil
+	}
+
+	// Test Ipt function (ignores data)
+	selectedStr, err := ipt.Ipt("Select an option:", opts, "opt2")
+	if err != nil {
+		if err.Error() == "EOF" {
+			f.Skip("Skipping test due to EOF (expected in non-interactive environment)")
+		}
+		f.Error(err)
+	}
+	if selectedStr != "opt2" {
+		f.Error("Expected default value to match")
+	}
+
+	// Test IptWithDefault function (includes data)
+	value, data, err := ipt.IptWithDefault("Select an option:", opts, "opt2")
+	if err != nil {
+		if err.Error() == "EOF" {
+			f.Skip("Skipping test due to EOF (expected in non-interactive environment)")
+		}
+		f.Error(err)
+	}
+
+	// Verify we got the right value and data
+	if value != "opt2" {
+		f.Error("Expected opt2 value")
+	}
+	if data != "simple data" {
+		f.Error("Expected 'simple data' for opt2")
+	}
+}
+
+func TestIptEmptyOptions(f *testing.T) {
+	// Test with empty options
+	opts := []ipt.Option{}
+
+	_, err := ipt.Ipt("This should fail", opts)
 	if err == nil {
-		f.Error("Expected error when default value is not in options")
-	}
-}
-
-func TestIptStructDefault(f *testing.T) {
-	type ColorObj struct {
-		Name string
-		Hex  string
+		f.Error("Expected error for empty options")
 	}
 
-	defaultColor := ColorObj{"Cyan", "#00FFFF"}
-	opts := []ipt.Option[ColorObj]{
-		{Label: "Red", Value: ColorObj{"Red", "#FF0000"}},
-		{Label: "Green", Value: ColorObj{"Green", "#00FF00"}},
-		{Label: "Blue", Value: ColorObj{"Blue", "#0000FF"}},
-		{Label: "Cyan", Value: defaultColor},
-	}
-
-	// Test struct default value
-	color, err := ipt.Ipt("What is your favorite color?", opts, defaultColor)
-	if err != nil {
-		if err.Error() == "EOF" {
-			f.Skip("Skipping test due to EOF (expected in non-interactive environment)")
-		}
-		f.Error(err)
-	}
-	if color != defaultColor {
-		f.Error("Expected default struct value to match")
-	}
-}
-
-func TestIptSingleSelectWithDefault(f *testing.T) {
-	// Test with string default value
-	strOpts := []ipt.Option[string]{
-		{Label: "Option1", Value: "Value1"},
-		{Label: "Option2", Value: "Value2"},
-		{Label: "Option3", Value: "Value3"},
-	}
-
-	// Test string default
-	selectedStr, err := ipt.Ipt("Select an option (string):", strOpts, "Value2")
-	if err != nil {
-		if err.Error() == "EOF" {
-			f.Skip("Skipping test due to EOF (expected in non-interactive environment)")
-		}
-		f.Error(err)
-	}
-	if selectedStr != "Value2" {
-		f.Error("Expected default string value to match")
-	}
-
-	// Test with struct default value
-	type TestStruct struct {
-		ID   int
-		Name string
-	}
-
-	defaultStruct := TestStruct{ID: 2, Name: "Default"}
-	structOpts := []ipt.Option[TestStruct]{
-		{Label: "Struct1", Value: TestStruct{ID: 1, Name: "One"}},
-		{Label: "Struct2", Value: defaultStruct},
-		{Label: "Struct3", Value: TestStruct{ID: 3, Name: "Three"}},
-	}
-
-	// Test struct default
-	selectedStruct, err := ipt.Ipt("Select an option (struct):", structOpts, defaultStruct)
-	if err != nil {
-		if err.Error() == "EOF" {
-			f.Skip("Skipping test due to EOF (expected in non-interactive environment)")
-		}
-		f.Error(err)
-	}
-	if selectedStruct != defaultStruct {
-		f.Error("Expected default struct value to match")
+	_, _, err = ipt.IptWithDefault("This should fail", opts, "default")
+	if err == nil {
+		f.Error("Expected error for empty options in IptWithDefault")
 	}
 }
