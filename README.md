@@ -1,28 +1,37 @@
 <div align="center">
-	<br>
-	<img width="100" src="__tests__/img.png" alt="ipt logo">
-	<br>
+  <br />
+  <img width="100" src="__tests__/img.png" alt="go-ipt logo" />
+  <br /><br />
+  <h1>go-ipt</h1>
+  <p><em>Interactive Pipe To: An interactive CLI selection tool for Go</em></p>
 </div>
 
-# go-ipt
-> Interactive Pipe To: The golang cli interactive workflow.
+---
 
+## ✨ Features
 
-## installation
+- Simple CLI prompts with list selection
+- Supports default selection
+- Extensible `Data` field for attaching metadata
+- Zero external dependencies
+- Cross-platform (uses standard `os` and `bufio`)
+
+## 📦 Installation
+
 ```sh
-go get -u github.com/afeiship/go-ipt
+go install github.com/afeiship/go-ipt@latest
 ```
 
-## usage
+> 💡 Use `go install` (Go 1.16+) instead of `go get -u` for installing binaries.
 
-### Basic usage
+## 🚀 Usage
+
+### Basic Example
 
 ```go
 package main
 
-import (
-	"github.com/afeiship/go-ipt"
-)
+import "github.com/afeiship/go-ipt"
 
 func main() {
 	opts := []ipt.Option{
@@ -35,113 +44,98 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	println(color) // Returns "red", "green", or "blue"
+	println(color) // e.g., "red", "green", or "blue"
 }
 ```
 
-### With default value
+### With Default Value
 
 ```go
-package main
-
-import (
-	"github.com/afeiship/go-ipt"
-)
-
-func main() {
-	// Options with default value
-	opts := []ipt.Option{
-		{Label: "Red", Value: "red"},
-		{Label: "Green", Value: "green"},
-		{Label: "Blue", Value: "blue"},
-	}
-
-	// Set "Green" as default
-	selectedColor, err := ipt.Ipt("Select your favorite color:", opts, "green")
-	if err != nil {
-		panic(err)
-	}
-	println(selectedColor) // Will be "green" if user just presses Enter
-}
+color, err := ipt.Ipt("Select your favorite color:", opts, "green")
+// If user presses Enter without selection, returns "green"
 ```
 
-### Using Data field for extended information
+### Accessing Extended Data
+
+Attach arbitrary metadata using the `Data` field:
 
 ```go
-package main
+type ColorInfo struct {
+	Name string
+	Hex  string
+}
 
-import (
-	"github.com/afeiship/go-ipt"
-	"fmt"
-)
+opts := []ipt.Option{
+	{Label: "Red", Value: "red", Data: ColorInfo{"Red", "#FF0000"}},
+	{Label: "Green", Value: "green", Data: ColorInfo{"Green", "#00FF00"}},
+	{Label: "Blue", Value: "blue", Data: ColorInfo{"Blue", "#0000FF"}},
+}
 
-func main() {
-	type ColorInfo struct {
-		Name string
-		Hex  string
-	}
+value, data, err := ipt.IptWithDefault("Select color:", opts, "green")
+if err != nil {
+	panic(err)
+}
 
-	opts := []ipt.Option{
-		{Label: "Red", Value: "red", Data: ColorInfo{"Red", "#FF0000"}},
-		{Label: "Green", Value: "green", Data: ColorInfo{"Green", "#00FF00"}},
-		{Label: "Blue", Value: "blue", Data: ColorInfo{"Blue", "#0000FF"}},
-	}
-
-	// Get both value and data
-	value, data, err := ipt.IptWithDefault("Select color:", opts, "green")
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Printf("Value: %s\n", value)
-	if colorInfo, ok := data.(ColorInfo); ok {
-		fmt.Printf("Name: %s, Hex: %s\n", colorInfo.Name, colorInfo.Hex)
-	}
+fmt.Printf("Value: %s\n", value)
+if info, ok := data.(ColorInfo); ok {
+	fmt.Printf("Name: %s, Hex: %s\n", info.Name, info.Hex)
 }
 ```
 
-### Using IptRaw
+### Simplified String List (`IptRaw`)
+
+When label and value are identical:
 
 ```go
-package main
+color, err := ipt.IptRaw("Pick a color:", []string{"Red", "Green", "Blue"}, "Green")
+// Default is "Green"
+```
 
-import (
-	"github.com/afeiship/go-ipt"
-)
+## 📚 API Reference
 
-func main() {
-	// Simple string options with default
-	color, err := ipt.IptRaw("Select color:", []string{"Red", "Green", "Blue"}, "Green")
-	if err != nil {
-		panic(err)
-	}
-	println(color) // Will be "Green" if user just presses Enter
+### `func Ipt(message string, options []Option, defaultValue ...string) (string, error)`
+
+Prompts user to select from a list of options.
+
+- `message`: Prompt text
+- `options`: Slice of `Option` structs
+- `defaultValue...`: Optional default value (uses first element if provided)
+
+Returns selected **value** or error.
+
+---
+
+### `func IptWithDefault(message string, options []Option, defaultValue string) (string, any, error)`
+
+Same as `Ipt`, but also returns the associated `Data` field.
+
+Returns: `(value, data, error)`
+
+---
+
+### `func IptRaw(message string, options []string, defaultValue ...string) (string, error)`
+
+Convenience function for simple string lists.  
+Label and value are the same.
+
+---
+
+### `type Option struct`
+
+```go
+type Option struct {
+	Label string      // Display label in the prompt
+	Value string      // Returned value when selected
+	Data  any         // Optional metadata (can be struct, string, etc.)
 }
 ```
 
-## API
+## 📝 Notes
 
-### `Ipt(message string, options []Option, opts ...string) (string, error)`
+- Input is read from `os.Stdin`.
+- Uses line-based selection (type number or use arrow keys if supported by terminal).
+- If no default is provided and user cancels (e.g., Ctrl+C), returns an error.
 
-- `message`: The prompt message to display
-- `options`: Array of Option containing Label, Value, and optional Data
-- `opts`: Optional default value (first argument if provided)
+## 🛠 License
 
-### `IptWithDefault(message string, options []Option, defaultValue string) (string, any, error)`
-
-- `message`: The prompt message to display
-- `options`: Array of Option containing Label, Value, and optional Data
-- `defaultValue`: Default value to select
-- Returns: selected value, data, and error
-
-### `IptRaw(message string, options []string, opts ...string) (string, error)`
-
-- `message`: The prompt message to display
-- `options`: Array of string options (label and value are the same)
-- `opts`: Optional default value (first argument if provided)
-
-### `Option struct`
-
-- `Label`: The display text for the option
-- `Value`: The string value to return when selected
-- `Data`: Optional extension data of any type, can be nil
+MIT © [afeiship](https://github.com/afeiship)
